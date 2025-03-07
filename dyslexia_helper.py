@@ -260,60 +260,6 @@ class DyslexiaFrontendApp:
 
         self.notebook.select(1)
 
-    def analyze_segments_locally(self):
-        final_text = ""
-        for seg in self.all_segments:
-            final_text += seg['text'].strip() + " "
-        final_text = final_text.strip()
-
-        reference_text = self.text_area.get("1.0", tk.END).strip()
-
-        ref_words = self.tokenize_text(reference_text)
-        final_words = self.tokenize_text(final_text)
-
-        correct_count = 0
-        for i, w in enumerate(final_words):
-            if i < len(ref_words):
-                if self.normalize_word(w) == self.normalize_word(ref_words[i]):
-                    correct_count += 1
-
-        if len(ref_words) > 0:
-            accuracy = (correct_count / len(ref_words)) * 100
-        else:
-            accuracy = 0
-
-        reading_speed = 80.0
-
-        hesitations = []
-        mispronunciations = []
-
-        analysis = {
-            "accuracy": accuracy,
-            "reading_speed": reading_speed,
-            "hesitations": hesitations,
-            "mispronunciations": mispronunciations
-        }
-        return analysis
-
-    def calc_local_analysis(self):
-        total_words = len(self.reference_words)
-        if total_words == 0:
-            accuracy_percent = 0
-        else:
-            accuracy_percent = (self.next_word_index / total_words) * 100
-
-        reading_speed = 90.0
-
-        hesitations = []
-        mispronunciations = []
-
-        return {
-            "accuracy": accuracy_percent,
-            "reading_speed": reading_speed,
-            "hesitations": hesitations,
-            "mispronunciations": mispronunciations
-        }
-
     def finalize_reading(self, use_stored_segments=False):
         if self.is_streaming:
             self.stop_streaming()
